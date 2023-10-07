@@ -6,21 +6,31 @@ services:
     image: postgres:12.16
     volumes:
       - postgres_db_data:/var/lib/postgresql/data
+      # - ./config:/etc/config
+      # - ${PWD}/config/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      # - ${PWD}/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    # command: postgres -c config_file=/etc/config/postgresql.conf
   web:
     build: .
     restart: on-failure
     command: python3 manage.py runserver 0.0.0.0:8000
+    image: learning_web:latest
     volumes:
       - .:/app
     ports:
       - "8000:8000"
+      - "3000:3000"
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - web_db
+    env_file:
+      - .env

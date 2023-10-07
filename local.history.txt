@@ -1,0 +1,9 @@
+123456123456
+
+# connect to postgres database
+psql -h localhost -d postgres -U postgres -W
+psql -h web_db -d postgres -U postgres -W
+psql -h 172.21.0.1 -p 5432 -d postgres -U postgres -W
+
+docker cp 08885bcfca22_learning_web_db_1:/var/lib/postgresql/data/postgresql.conf postgresql.conf
+docker cp 08885bcfca22_learning_web_db_1:/var/lib/postgresql/data/pg_hba.conf pg_hba.conf
