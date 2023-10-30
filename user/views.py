@@ -1,8 +1,10 @@
 from typing import Any
 from django.db.models.query import QuerySet
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView
+from .forms import ContactForm
+from django.shortcuts import render
 
 from user.models import Publisher, Book
 
@@ -30,3 +32,18 @@ class PublisherDetailView(DetailView):
         
         context["book_list"] = Book.objects.all()
         return context
+    
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        
+        if form.is_valid():
+            print("[INFO] form", form)
+            return JsonResponse({'success': True})
+        else:
+            print("[ERROR] form error", form)
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = ContactForm()
+    
+    return render(request, 'contacts/contact.html', {'form': form})
