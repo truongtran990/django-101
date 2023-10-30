@@ -1,3 +1,16 @@
+# version: '3.4'
+
+# services:
+#   vscodedjangodocker:
+#     image: vscodedjangodocker
+#     build:
+#       context: .
+#       dockerfile: ./Dockerfile
+#     command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
+#     ports:
+#       - 8000:8000
+#       - 5678:5678
+
 volumes:
   postgres_db_data:
 
@@ -19,10 +32,12 @@ services:
   web:
     build: .
     restart: on-failure
-    command: /bin/sh -c "while sleep 1000; do :; done"
-    # command: python manage.py runserver 0.0.0.0:8000
-    # command: pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000
-
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000 --nothreading --noreload",
+      ]
     image: learning_web:latest
     volumes:
       - .:/app
